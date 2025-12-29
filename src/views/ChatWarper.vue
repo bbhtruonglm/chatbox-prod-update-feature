@@ -101,6 +101,7 @@ const { ref_alert_reach_limit } = storeToRefs(commonStore)
 
 // utils
 const { t: $t } = useI18n()
+// Khai báo router
 const $router = useRouter()
 const $delay = container.resolve(Delay)
 const $socket = container.resolve(Socket)
