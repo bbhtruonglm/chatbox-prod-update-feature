@@ -21,10 +21,15 @@
         :class="{
           'contrast-50 cursor-not-allowed': !pageStore.countSelectedPage(),
         }"
-        class="btn-custom text-white bg-orange-600"
+        class="btn-custom text-white bg-orange-600 relative group"
       >
         <SquaresPlusIcon class="w-3.5 h-3.5" />
-        {{ $t('v1.view.main.dashboard.select_page.munti_chat_page') }}
+        <span v-if="pageStore.countSelectedPage()">
+          {{ $t('Gộp') }} {{ pageStore.countSelectedPage() }} {{ $t('Trang') }}
+        </span>
+        <span v-else>
+          {{ $t('v1.view.main.dashboard.select_page.munti_chat_page') }}
+        </span>
       </button>
     </div>
   </Transition>
