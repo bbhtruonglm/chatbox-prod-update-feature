@@ -28,11 +28,17 @@ export interface FileInfo {
   fb_image_id: string[]
   /**gắn thêm cờ đã chọn */
   is_select?: boolean
+  /** id page */
+  fb_page_id: string
 }
 /**dữ liệu file khi được upload */
 export interface UploadFile {
+  /** id duy nhất của file */
+  id: string
   /**dữ liệu gốc của file */
   source?: File
+  /** tên file */
+  file_name?: string
   /**kiểu fb của file */
   type: FileTypeInfo
   /**gắn cờ đã gửi xong */
@@ -71,7 +77,7 @@ export interface FolderInfo {
   /**gắn cờ chế độ chỉnh sửa */
   is_edit?: boolean
   /** id page */
-  fb_page_id?: string
+  fb_page_id: string
 }
 /**cập nhật dữ liệu thư mục */
 export interface UpdateFolderInput {

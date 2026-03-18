@@ -35,6 +35,14 @@ export const nonAccentVn = (input: string) => {
   return input
 }
 
+export const nonAccentVnSearch = (input: string) => {
+  return input
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+}
+
 /**tạo mới obj để ngắt sự liên kết trong ô nhớ */
 export const copy = (object: Object) => JSON.parse(JSON.stringify(object))
 
