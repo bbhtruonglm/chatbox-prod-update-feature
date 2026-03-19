@@ -20,7 +20,7 @@
       :placeholder="$t('Tìm kiếm nhãn')"
       class="border px-3 py-1 rounded-lg focus:outline-none w-full text-sm"
       v-on:keyup="searchLabel"
-      v-model="label_search_name"
+      v-model.trim="label_search_name"
     />
   </div>
   <div class="h-[calc(100%_-_88px)] overflow-y-auto">
@@ -115,7 +115,7 @@ function selectLabel(index: number) {
 function sortLabel(input: ILabel[]) {
   return sortBy(input, 'is_selected').reverse()
 }
-/** Tìm kiếm nhãn theo tên */
+/** Tìm kiếm nhãn theo tên */ 
 const searchLabel = debounce(($event: Event) => {
   // nếu không tìm kiếm thì hiển thị toàn bộ
   if (!label_search_name.value)

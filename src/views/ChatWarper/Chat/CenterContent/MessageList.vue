@@ -183,6 +183,14 @@
         <SendStatus :is_error="message.error" />
       </div>
     </div>
+    <div
+      v-if="is_ext_uploading"
+      class="absolute bottom-4 left-4 z-50 bg-white shadow flex items-center gap-1.5 px-2 py-1 text-[15px] text-slate-600 rounded-md border border-slate-200"
+      style="transform: scale(0.7); transform-origin: left bottom;"
+    >
+      <LoadingIcon class="!w-5 !h-5 !text-blue-200 !fill-blue-700" />
+      Đang tải ảnh lên {{ ext_upload_progress }}/{{ ext_upload_total }}
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -199,7 +207,7 @@ import {
   useOrgStore,
 } from '@/stores'
 import { debounce, findLastIndex, remove, size, sortedIndexBy } from 'lodash'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import ClientAvatar from '@/components/Avatar/ClientAvatar.vue'
 import StaffAvatar from '@/components/Avatar/StaffAvatar.vue'
@@ -218,6 +226,7 @@ import UnReadAlert from '@/views/ChatWarper/Chat/CenterContent/MessageList/UnRea
 
 import ChatIcon from '@/components/Icons/Chat.vue'
 import DoubleCheckIcon from '@/components/Icons/DoubleCheck.vue'
+import LoadingIcon from '@/components/Icons/Loading.vue'
 
 import type { MessageInfo } from '@/service/interface/app/message'
 import type { CbError } from '@/service/interface/function'
@@ -254,6 +263,11 @@ const old_position_to_bottom = ref(0)
 const list_debounce_staff = ref<{
   [index: string]: DebouncedFunc<any>
 }>({})
+
+/** tiến trình upload của extension */
+const is_ext_uploading = ref(false)
+const ext_upload_progress = ref(0)
+const ext_upload_total = ref(0)
 
 /** hội thoại đang chọn */
 const select_conversation = computed(() => {
@@ -297,9 +311,65 @@ const last_client_message_index = computed(() =>
   ),
 )
 
+// hủy lắng nghe sự kiện từ ext khi component bị hủy
+onUnmounted(() => {
+  window.removeEventListener('message', onExtensionMessage)
+})
+
+/** timeout hide upload progress */
+let ext_upload_timeout: ReturnType<typeof setTimeout> | null = null
+
+/** xử lý sự kiện báo upload từ extension */
+function onExtensionMessage($event: MessageEvent) {
+  /** lấy dữ liệu gửi từ extension qua window postMessage */
+  let data = $event.data
+  
+  // Parse stringified JSON if any
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data) } catch (e) {}
+  }
+
+  /** bóc tách dữ liệu từ nhiều cấu trúc phản hồi khác nhau của extension */
+  const payload = data?.r || data?.data || data
+  
+  // Kiểm tra nới lỏng: có the extension gửi 'event' thay vì 'action',
+  // hoặc có khi chỉ trả về { progress, total, status }
+  const is_upload = 
+    payload?.action === 'UPLOAD_IMAGE' || data?.action === 'UPLOAD_IMAGE' ||
+    payload?.event === 'UPLOAD_IMAGE' || data?.event === 'UPLOAD_IMAGE' ||
+    payload?.event === 'RESPONSE_SEND_FILE' || data?.event === 'RESPONSE_SEND_FILE' ||
+    (data?.progress !== undefined && data?.total !== undefined) ||
+    (payload?.progress !== undefined && payload?.total !== undefined)
+
+  if (is_upload) {
+    // Ưu tiên object chứa thuộc tính progress
+    const info = payload?.progress !== undefined ? payload : data
+    
+    // Nếu event không chưa info.progress thì bỏ qua (avoid false positives)
+    if (info.progress === undefined) return
+    
+    ext_upload_progress.value = info.progress || 0
+    ext_upload_total.value = info.total || 0
+    
+    // Luôn hiển thị UI khi nhận event
+    is_ext_uploading.value = true
+
+    if (ext_upload_timeout) clearTimeout(ext_upload_timeout)
+
+    // Nếu DONE hoặc tiến độ đã đạt 100% thì hẹn giờ tắt
+    if (info.status === 'DONE' || (info.total > 0 && info.progress >= info.total)) {
+      ext_upload_timeout = setTimeout(() => {
+        is_ext_uploading.value = false
+      }, 2000)
+    }
+  }
+}
+
 // lắng nghe sự kiện từ socket khi component được tạo ra
 onMounted(() => {
   resetMessage()
+  /** thực hiện lắng nghe các sự kiện message gửi đến window */
+  window.addEventListener('message', onExtensionMessage)
   // // * reset danh sách tin nhắn lúc mới vào nếu không mở bằng modal
   // messageStore.list_message = []
 
