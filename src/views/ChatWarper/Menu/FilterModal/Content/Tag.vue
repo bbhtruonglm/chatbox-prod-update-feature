@@ -18,7 +18,7 @@
       :placeholder="$t('Tìm kiếm nhãn')"
       class="border px-3 py-1 rounded-lg focus:outline-none text-sm"
       v-on:keyup="searchLabel"
-      v-model.trim="label_search_name"
+      v-model="label_search_name"
     />
   </div>
   <div class="flex justify-between py-3 border-t border-b">

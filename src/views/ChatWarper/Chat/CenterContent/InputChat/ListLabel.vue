@@ -38,20 +38,20 @@
           "
           v-if="total_over_label"
           @click="$main.expandList"
-          class="rounded border border-slate-500 text-slate-700 w-7 h-6 flex-shrink-0 justify-center items-center flex text-xs font-semibold"
+          class="rounded border border-slate-500 text-slate-700 w-6 h-6 flex-shrink-0 justify-center items-center flex text-xs font-semibold"
         >
           <ArrowDownIcon
             v-if="is_expand_label"
             class="w-2.5 h-2.5"
           />
-          <span v-else>{{ display_total_over_label }}</span>
+          <span v-else> +{{ total_over_label }} </span>
         </button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { map, partition, sortBy } from 'lodash'
 import { useCommonStore, useConversationStore, useOrgStore } from '@/stores'
 import { loading } from '@/utils/decorator/Loading'
@@ -90,12 +90,6 @@ const is_loading_label = ref(false)
 const labels = ref<ICustomLabel[]>([])
 /**tổng số nhãn bị ẩn */
 const total_over_label = ref<number>()
-/** text hiển thị cho số lượng nhãn bị ẩn */
-const display_total_over_label = computed(() => {
-  if (!total_over_label.value) return ''
-
-  return total_over_label.value > 99 ? '99+' : `+${total_over_label.value}`
-})
 
 class Main {
   /**

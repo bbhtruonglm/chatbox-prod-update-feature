@@ -1,9 +1,9 @@
 <template>
   <div
-    class="rounded-lg p-3 bg-slate-100 border border-slate-300 grid grid-cols-2 overflow-hidden text-sm gap-2.5"
+    class="rounded-lg p-3 bg-slate-100 border border-slate-300 max-sm:flex max-sm:flex-col sm:grid sm:grid-cols-2 max-sm:max-w-full max-sm:!min-w-0 max-sm:!w-full overflow-hidden text-sm gap-2.5"
     :class="[is_modal ? 'min-w-[674px] w-full' : 'w-[720px]']"
   >
-    <div class="bg-slate-100 flex flex-col gap-2.5">
+    <div class="bg-slate-100 flex flex-col gap-2.5 max-sm:order-2 max-sm:w-full">
       <div>
         <div class="text-slate-700">
           {{
@@ -12,7 +12,7 @@
         </div>
         <div class="flex gap-3 items-center">
           <div
-            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit"
+            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit max-sm:max-w-[180px]"
           >
             {{ payment_info?.account }}
           </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="flex gap-3 items-center">
           <div
-            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit"
+            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit max-sm:max-w-[180px]"
           >
             {{ payment_info?.name }}
           </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="flex gap-3 items-center">
           <div
-            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit"
+            class="border border-green-800 bg-green-50 py-2 px-3 rounded-lg font-semibold w-fit max-sm:max-w-[180px]"
           >
             {{ txn_id }}
           </div>
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div
-      class="p-5 bg-white border border-slate-300 flex flex-col gap-2.5 items-center rounded-lg"
+      class="p-5 bg-white border border-slate-300 flex flex-col gap-2.5 items-center rounded-lg max-sm:order-1 max-sm:w-full"
     >
       <div>
         {{ $t('v1.view.main.dashboard.org.pay.recharge.transfer_info.qr') }}
@@ -117,7 +117,7 @@
   >
     {{ $t('v1.view.main.dashboard.org.pay.recharge.success') }}
   </div>
-  <div class="text-sm py-3 px-5 rounded-lg bg-yellow-50 w-[572px]">
+  <div class="text-sm py-3 px-5 rounded-lg bg-yellow-50 w-[572px] max-sm:w-full">
     <div class="font-semibold">
       {{ $t('v1.view.main.dashboard.org.pay.recharge.transfer_info.hint') }}:
     </div>

@@ -107,7 +107,7 @@
         class="absolute top-1/2 left-3 -translate-y-1/2 w-4 h-4 text-slate-500"
       />
       <input
-        v-model.trim="search_conversation"
+        v-model="search_conversation"
         @blur="$main.toggleSearch()"
         ref="ref_search_conversation"
         class="w-full bg-slate-100 placeholder-slate-500 py-1.5 pl-9 pr-8 text-sm rounded-full"
@@ -209,7 +209,7 @@ const ref_search_conversation = ref<HTMLInputElement>()
 const onSearchConversation = debounce((value?: string) => {
   // lưu giá trị search vào biến
   conversationStore.option_filter_page_data.search = value
-}, 500)
+}, 300)
 
 /** dữ liệu lọc thể hiện ra dạng chuỗi */
 const filter = computed(() => {
@@ -417,7 +417,7 @@ class Main {
       },
     })
   }
-  /**chuyển đổi trạng thái tìm kiếm */ 
+  /**chuyển đổi trạng thái tìm kiếm */
   async toggleSearch() {
     // nếu đang tìm kiếm và có giá trị ô tìm kiếm thì không cho đóng ô tìm kiếm
     if (is_search.value && search_conversation.value) return
