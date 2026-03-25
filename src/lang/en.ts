@@ -330,6 +330,7 @@ const source: Language = {
   'Gói hiện tại': 'Current package',
   'File vượt quá dung lượng cho phép': 'File size exceeds the allowed limit',
   'Vui lòng chuyển sang tài khoản TikTok Business': 'Please switch to TikTok Business account',
+  'thông báo khác': 'other notifications',
 
   v1: {
     common: {
